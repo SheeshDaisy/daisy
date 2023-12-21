@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Login Page with Refreshable Captcha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      z-index: 1;
+    }
+
+    .popup-content {
+      text-align: center;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    #captchaContainer {
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="popup" id="loginPopup">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">&times;</span>
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <div id="captchaContainer">
+        <label for="captcha">Captcha:</label>
+        <input type="text" id="captcha" name="captcha" required>
+        <span id="captchaText"></span>
+        <button type="button" onclick="refreshCaptcha()">Refresh Captcha</button>
+      </div>
+
+      <button type="button" onclick="submitForm()">Login</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openPopup() {
+    document.getElementById('loginPopup').style.display = 'block';
+    generateCaptcha();
+  }
+
+  function closePopup() {
+    document.getElementById('loginPopup').style.display = 'none';
+  }
+
+  function generateCaptcha() {
+    const captchaText = Math.random().toString(36).substring(2, 8).toUpperCase();
+    document.getElementById('captchaText').innerText = captchaText;
+  }
+
+  function refreshCaptcha() {
+    generateCaptcha();
+    document.getElementById('captcha').value = ''; // Clear the entered captcha
+  }
+
+  function submitForm() {
+    const enteredCaptcha = document.getElementById('captcha').value.toUpperCase();
+    const captchaText = document.getElementById('captchaText').innerText;
+
+    if (enteredCaptcha === captchaText) {
+      alert('Login successful!');
+      closePopup();
+    } else {
+      alert('Incorrect captcha. Please try again.');
+      refreshCaptcha();
+    }
+  }
+
+  // Open the popup when the page loads (for demonstration purposes)
+  document.addEventListener('DOMContentLoaded', openPopup);
+</script>
+
+</body>
+</html>
